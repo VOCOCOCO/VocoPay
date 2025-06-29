@@ -2,7 +2,7 @@
 <html lang="uk">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>VOCO Pay</title>
   <style>
     @keyframes slideIn {
@@ -24,37 +24,50 @@
       font-family: 'Arial', sans-serif;
       text-align: center;
       overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
     .container {
-      padding: 80px 20px;
+      padding: 60px 20px 40px;
+      max-width: 600px;
+      margin: 0 auto;
     }
 
     h1 {
       color: #60f070;
       font-size: 36px;
       margin-bottom: 20px;
+      word-break: break-word;
     }
 
     h2 {
       font-size: 28px;
       margin-bottom: 40px;
+      line-height: 1.2;
+      word-break: break-word;
     }
 
     .btn {
+      display: inline-block;
       padding: 15px 30px;
       font-size: 18px;
-      margin: 10px;
+      margin: 10px 5px;
       border: none;
       border-radius: 8px;
       cursor: pointer;
       color: white;
       background-color: #222;
       transition: background 0.3s;
+      min-width: 140px;
+      text-decoration: none;
+      user-select: none;
     }
 
-    .btn:hover {
+    .btn:hover,
+    .btn:focus {
       background-color: #333;
+      outline: none;
     }
 
     .modal {
@@ -62,71 +75,107 @@
       position: fixed;
       top: 0; left: 0;
       width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.9);
+      background: rgba(0, 0, 0, 0.95);
       justify-content: center;
       align-items: center;
       z-index: 9999;
+      padding: 10px;
+      box-sizing: border-box;
     }
 
     .modal-content {
       background: #1c1c1c;
-      padding: 30px;
-      border-radius: 10px;
-      width: 90%;
-      max-width: 500px;
+      padding: 25px 20px 30px;
+      border-radius: 12px;
+      width: 100%;
+      max-width: 480px;
       text-align: left;
       position: relative;
       animation: fadeIn 0.3s ease;
+      box-sizing: border-box;
+      max-height: 90vh;
+      overflow-y: auto;
     }
 
     .modal-content h2 {
       text-align: center;
+      margin-top: 0;
+      margin-bottom: 20px;
+      font-weight: 700;
+      font-size: 24px;
     }
 
     .close {
       position: absolute;
-      top: 10px; right: 15px;
-      font-size: 24px;
+      top: 12px;
+      right: 18px;
+      font-size: 28px;
       color: white;
       cursor: pointer;
+      user-select: none;
     }
 
     .copy-box {
       background: #333;
-      padding: 12px;
-      border-radius: 6px;
+      padding: 12px 14px;
+      border-radius: 8px;
       font-size: 18px;
       margin-bottom: 15px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-wrap: nowrap;
+      overflow-x: auto;
     }
 
     .copy-text {
       user-select: all;
       overflow-x: auto;
+      flex-grow: 1;
+      padding-right: 10px;
+      word-break: break-all;
     }
 
     .copy-btn {
       cursor: pointer;
-      margin-left: 10px;
       color: #60f070;
-      font-weight: bold;
+      font-weight: 700;
       font-size: 16px;
+      white-space: nowrap;
+      flex-shrink: 0;
+      transition: color 0.3s;
+      user-select: none;
+    }
+
+    .copy-btn:hover,
+    .copy-btn:focus {
+      color: #a0ffa0;
+      outline: none;
     }
 
     .note {
       font-size: 14px;
       margin-top: 10px;
       color: #ccc;
+      line-height: 1.4;
     }
 
     .menu-toggle {
-      position: absolute;
+      position: fixed;
       top: 20px;
       left: 20px;
       font-size: 32px;
       cursor: pointer;
+      z-index: 11000;
+      user-select: none;
+      color: #60f070;
+      transition: color 0.3s;
+    }
+
+    .menu-toggle:hover,
+    .menu-toggle:focus {
+      color: #a0ffa0;
+      outline: none;
     }
 
     .side-menu {
@@ -137,36 +186,62 @@
       height: 100%;
       background: #111;
       color: white;
-      padding: 20px;
+      padding: 25px 20px 20px;
       transition: left 0.4s ease;
-      z-index: 1000;
+      z-index: 10500;
+      box-sizing: border-box;
+      overflow-y: auto;
     }
 
     .side-menu.open {
       left: 0;
+      box-shadow: 3px 0 15px rgba(0,0,0,0.6);
     }
 
     .side-menu h3 {
       margin-top: 0;
+      margin-bottom: 25px;
+      font-weight: 700;
+      font-size: 22px;
     }
 
     .side-menu .close {
       position: absolute;
-      top: 15px;
-      right: 15px;
-      font-size: 26px;
+      top: 18px;
+      right: 20px;
+      font-size: 30px;
+      cursor: pointer;
+      user-select: none;
+      color: #60f070;
+      transition: color 0.3s;
+    }
+
+    .side-menu .close:hover,
+    .side-menu .close:focus {
+      color: #a0ffa0;
+      outline: none;
     }
 
     .side-menu button {
       display: block;
       width: 100%;
-      padding: 12px;
+      padding: 14px 16px;
       margin: 10px 0;
       background: #222;
       color: white;
       border: none;
-      border-radius: 6px;
+      border-radius: 8px;
       cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      transition: background 0.3s;
+      user-select: none;
+    }
+
+    .side-menu button:hover,
+    .side-menu button:focus {
+      background: #333;
+      outline: none;
     }
 
     .footer {
@@ -175,111 +250,236 @@
       font-size: 14px;
       color: #777;
       background-color: #111;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     .review {
       background: #222;
-      padding: 12px;
-      border-radius: 6px;
-      margin: 10px 0;
+      padding: 14px 16px;
+      border-radius: 8px;
+      margin: 12px 0;
       color: #eee;
       text-align: left;
+      font-size: 15px;
+      line-height: 1.4;
     }
 
     .stars {
       color: gold;
-      margin-bottom: 5px;
+      margin-bottom: 8px;
+      font-size: 18px;
+      user-select: none;
     }
 
     textarea, select {
       width: 100%;
-      padding: 10px;
+      padding: 12px;
       margin: 10px 0;
-      border-radius: 6px;
+      border-radius: 8px;
       border: none;
       background: #333;
       color: white;
+      font-size: 16px;
+      resize: vertical;
+      box-sizing: border-box;
+      font-family: inherit;
+    }
+
+    textarea::placeholder {
+      color: #bbb;
+    }
+
+    select {
+      cursor: pointer;
     }
 
     .submit-btn {
       background-color: #60f070;
       color: black;
       font-weight: bold;
-      padding: 10px 20px;
+      padding: 12px 25px;
       border: none;
-      border-radius: 6px;
+      border-radius: 8px;
       cursor: pointer;
+      font-size: 16px;
+      user-select: none;
+      transition: background-color 0.3s;
+    }
+
+    .submit-btn:hover,
+    .submit-btn:focus {
+      background-color: #4ed75b;
+      outline: none;
+    }
+
+    /* Scrollbar for modal-content */
+    .modal-content::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .modal-content::-webkit-scrollbar-thumb {
+      background-color: #555;
+      border-radius: 4px;
+    }
+
+    /* Responsive styles */
+    @media (max-width: 600px) {
+      .container {
+        padding: 40px 15px 30px;
+      }
+
+      h1 {
+        font-size: 28px;
+      }
+
+      h2 {
+        font-size: 20px;
+        margin-bottom: 30px;
+      }
+
+      .btn {
+        width: 100%;
+        font-size: 16px;
+        padding: 14px;
+        margin: 10px 0;
+        min-width: auto;
+      }
+
+      .modal-content {
+        width: 95%;
+        padding: 20px;
+      }
+
+      .copy-box {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .copy-text {
+        font-size: 16px;
+        padding-right: 0;
+        margin-bottom: 8px;
+        white-space: normal;
+      }
+
+      .copy-btn {
+        margin-left: 0;
+        font-size: 15px;
+        align-self: stretch;
+        text-align: center;
+        padding: 8px 0;
+        border-top: 1px solid #4caf50;
+        user-select: none;
+      }
+
+      .menu-toggle {
+        font-size: 28px;
+        top: 15px;
+        left: 15px;
+      }
+
+      .side-menu {
+        width: 85%;
+        max-width: 320px;
+        padding: 20px 15px 15px;
+      }
+
+      .side-menu h3 {
+        font-size: 20px;
+      }
+
+      .side-menu button {
+        font-size: 15px;
+        padding: 12px;
+      }
+
+      .footer {
+        font-size: 13px;
+        padding: 15px 10px;
+        max-width: 95%;
+      }
+
+      .review {
+        font-size: 14px;
+      }
+
+      textarea, select {
+        font-size: 14px;
+      }
+
+      .submit-btn {
+        font-size: 15px;
+        padding: 12px;
+      }
     }
   </style>
 </head>
 <body>
 
-  <div class="menu-toggle" onclick="toggleMenu()">⋮</div>
+  <div class="menu-toggle" tabindex="0" role="button" aria-label="Відкрити меню" onclick="toggleMenu()">⋮</div>
 
-  <div class="side-menu" id="sideMenu">
-    <div class="close" onclick="toggleMenu()">&times;</div>
+  <nav class="side-menu" id="sideMenu" aria-hidden="true" aria-label="Бічне меню">
+    <div class="close" tabindex="0" role="button" aria-label="Закрити меню" onclick="toggleMenu()">&times;</div>
     <h3>Меню</h3>
     <button onclick="openModal('aboutModal')">Про нас</button>
     <button onclick="openModal('reviewsModal')">Відгуки</button>
     <button onclick="openModal('rulesModal')">Правила</button>
-  </div>
+  </nav>
 
-  <div class="container">
+  <main class="container">
     <h1>VOCO Pay</h1>
     <h2>Платіть безпечно<br>і без комісій!</h2>
     <button class="btn" onclick="openModal('cardModal')">Сплатити на картку</button>
-    <a href="https://www.privat24.ua/send/hj9vl" class="btn"> Pay / G Pay</a>
+    <a href="https://www.privat24.ua/send/hj9vl" class="btn" target="_blank" rel="noopener noreferrer"> Pay / G Pay</a>
     <p style="margin-top: 20px; color: #aaa;">Виберіть спосіб оплати</p>
-  </div>
+  </main>
 
   <!-- Картка -->
-  <div class="modal" id="cardModal">
+  <div class="modal" id="cardModal" role="dialog" aria-modal="true" aria-labelledby="cardModalTitle" tabindex="-1">
     <div class="modal-content">
-      <div class="close" onclick="closeModal('cardModal')">&times;</div>
-      <h2>Оплата на картку</h2>
-      <div class="copy-box">
+      <div class="close" tabindex="0" role="button" aria-label="Закрити вікно" onclick="closeModal('cardModal')">&times;</div>
+      <h2 id="cardModalTitle">Оплата на картку</h2>
+      <div class="copy-box" tabindex="0" aria-label="Номер картки для копіювання">
         <span class="copy-text" id="cardNumber">5168752020175371</span>
-        <span class="copy-btn" onclick="copyToClipboard('cardNumber')">Скопіювати</span>
+        <span class="copy-btn" tabindex="0" role="button" aria-label="Скопіювати номер картки" onclick="copyToClipboard('cardNumber')">Скопіювати</span>
       </div>
-      <div class="copy-box">
+      <div class="copy-box" tabindex="0" aria-label="Коментар до платежу для копіювання">
         <span class="copy-text" id="commentCode"></span>
-        <span class="copy-btn" onclick="copyToClipboard('commentCode')">Скопіювати</span>
+        <span class="copy-btn" tabindex="0" role="button" aria-label="Скопіювати коментар до платежу" onclick="copyToClipboard('commentCode')">Скопіювати</span>
       </div>
       <div class="note">Скопіюйте номер картки та додайте 5 цифр у коментар до платежу</div>
     </div>
   </div>
 
   <!-- Про нас -->
-  <div class="modal" id="aboutModal">
+  <div class="modal" id="aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutModalTitle" tabindex="-1">
     <div class="modal-content">
-      <div class="close" onclick="closeModal('aboutModal')">&times;</div>
-      <h2>Про нас</h2>
+      <div class="close" tabindex="0" role="button" aria-label="Закрити вікно" onclick="closeModal('aboutModal')">&times;</div>
+      <h2 id="aboutModalTitle">Про нас</h2>
       <p><strong>VOCO</strong> — сучасний сервіс створення IT проєктів</p>
-
-<p>Ми створюємо інноваційні цифрові рішення у сфері Telegram з акцентом на зручність, прозорість та надійність. Наші основні напрямки роботи:</p>
-
-<ul>
-  <li><strong>Онлайн-перекази без комісій</strong> — це перша наша платформа для платежів, будемо вдячні за відгук!</li>
-  <li><strong>Telegram-сервіси та міні-додатки</strong> — інтерактивні боти, мініапки та сервіси для оплат, подарунків і підписок прямо в Telegram.</li>
-  <li><strong>Мікроплатежі та цифрові товари</strong> — маркетплейси для продажу цифрових продуктів, донатів, підписок і внутрішньої валюти.</li>
-  <li><strong>Сервіси для авторів і бізнесу</strong> — інструменти для монетизації контенту, прийому платежів та автоматизації взаємодії з клієнтами та оформленням сайтів.</li>
-</ul>
-
-<p>VOCO Pay — це не просто платіжна система, а ціла екосистема для зручної фінансової взаємодії у цифровому світі.</p>
-
+      <p>Ми створюємо інноваційні цифрові рішення у сфері Telegram з акцентом на зручність, прозорість та надійність. Наші основні напрямки роботи:</p>
+      <ul>
+        <li><strong>Онлайн-перекази без комісій</strong> — це перша наша платформа для платежів, будемо вдячні за відгук!</li>
+        <li><strong>Telegram-сервіси та міні-додатки</strong> — інтерактивні боти, мініапки та сервіси для оплат, подарунків і підписок прямо в Telegram.</li>
+        <li><strong>Мікроплатежі та цифрові товари</strong> — маркетплейси для продажу цифрових продуктів, донатів, підписок і внутрішньої валюти.</li>
+        <li><strong>Сервіси для авторів і бізнесу</strong> — інструменти для монетизації контенту, прийому платежів та автоматизації взаємодії з клієнтами та оформленням сайтів.</li>
+      </ul>
+      <p>VOCO Pay — це не просто платіжна система, а ціла екосистема для зручної фінансової взаємодії у цифровому світі.</p>
     </div>
   </div>
 
   <!-- Відгуки -->
-  <div class="modal" id="reviewsModal">
+  <div class="modal" id="reviewsModal" role="dialog" aria-modal="true" aria-labelledby="reviewsModalTitle" tabindex="-1">
     <div class="modal-content">
-      <div class="close" onclick="closeModal('reviewsModal')">&times;</div>
-      <h2>Відгуки</h2>
+      <div class="close" tabindex="0" role="button" aria-label="Закрити вікно" onclick="closeModal('reviewsModal')">&times;</div>
+      <h2 id="reviewsModalTitle">Відгуки</h2>
       <div class="review"><div class="stars">★★★★★</div>Сервіс супер</div>
       <div class="review"><div class="stars">★★★★★</div>Все працює</div>
       <div class="review"><div class="stars">★★★★★</div>Рекомендую. Больше всего понравилась оплата через Apple Pay</div>
-      <textarea id="reviewText" placeholder="Ваш відгук..."></textarea>
-      <select id="reviewStars">
+      <textarea id="reviewText" placeholder="Ваш відгук..." aria-label="Ваш відгук"></textarea>
+      <select id="reviewStars" aria-label="Оцінка">
         <option value="1">★☆☆☆☆</option>
         <option value="2">★★☆☆☆</option>
         <option value="3">★★★☆☆</option>
@@ -291,62 +491,79 @@
   </div>
 
   <!-- Правила -->
-  <div class="modal" id="rulesModal">
+  <div class="modal" id="rulesModal" role="dialog" aria-modal="true" aria-labelledby="rulesModalTitle" tabindex="-1">
     <div class="modal-content">
-      <div class="close" onclick="closeModal('rulesModal')">&times;</div>
-      <h2>Правила</h2>
+      <div class="close" tabindex="0" role="button" aria-label="Закрити вікно" onclick="closeModal('rulesModal')">&times;</div>
+      <h2 id="rulesModalTitle">Правила</h2>
       <div style="text-align: left; font-size: 16px; line-height: 1.6; color: #ddd;">
-    <p><strong>1. Призначення сервісу</strong><br>
-    <span style="color: #bbb;">VOCO Pay — це платформа для швидких, зручних та безпечних онлайн-переказів без додаткових комісій.</span></p>
+        <p><strong>1. Призначення сервісу</strong><br>
+        <span style="color: #bbb;">VOCO Pay — це платформа для швидких, зручних та безпечних онлайн-переказів без додаткових комісій.</span></p>
 
-    <p><strong>2. Конфіденційність</strong><br>
-    <span style="color: #bbb;">Усі введені вами дані не зберігаються на сервері та не передаються третім особам.</span></p>
+        <p><strong>2. Конфіденційність</strong><br>
+        <span style="color: #bbb;">Усі введені вами дані не зберігаються на сервері та не передаються третім особам.</span></p>
 
-    <p><strong>3. Оплата на картку</strong><br>
-    <span style="color: #bbb;">Переказ коштів здійснюється через банківські сервіси. Після копіювання номера картки та унікального коду, переконайтеся у правильності введених даних.</span></p>
+        <p><strong>3. Оплата на картку</strong><br>
+        <span style="color: #bbb;">Переказ коштів здійснюється через банківські сервіси. Після копіювання номера картки та унікального коду, переконайтеся у правильності введених даних.</span></p>
 
-    <p><strong>4. Коментар до платежу</strong><br>
-    <span style="color: #bbb;">Обов’язково додавайте згенерований 5-значний код у коментар до платежу — це допомагає автоматично ідентифікувати ваш переказ.</span></p>
+        <p><strong>4. Коментар до платежу</strong><br>
+        <span style="color: #bbb;">Обов’язково додавайте згенерований 5-значний код у коментар до платежу — це допомагає автоматично ідентифікувати ваш переказ.</span></p>
 
-    <p><strong>5. Технічна підтримка</strong><br>
-    <span style="color: #bbb;">У разі виникнення помилок або питань звертайтесь у підтримку через телеграм @supvoco.</span></p>
+        <p><strong>5. Технічна підтримка</strong><br>
+        <span style="color: #bbb;">У разі виникнення помилок або питань звертайтесь у підтримку через телеграм @supvoco.</span></p>
 
-    <p><strong>6. Відгуки користувачів</strong><br>
-    <span style="color: #bbb;">Усі надіслані відгуки проходять модерацію. Некоректні або образливі повідомлення не будуть опубліковані.</span></p>
+        <p><strong>6. Відгуки користувачів</strong><br>
+        <span style="color: #bbb;">Усі надіслані відгуки проходять модерацію. Некоректні або образливі повідомлення не будуть опубліковані.</span></p>
 
-    <p><strong>7. Відповідальність</strong><br>
-    <span style="color: #bbb;">VOCO Pay не несе відповідальності за неправильно введені реквізити або коментарі, що можуть призвести до втрати коштів.</span></p>
+        <p><strong>7. Відповідальність</strong><br>
+        <span style="color: #bbb;">VOCO Pay не несе відповідальності за неправильно введені реквізити або коментарі, що можуть призвести до втрати коштів.</span></p>
 
-    <p><strong>8. Зміни в умовах</strong><br>
-    <span style="color: #bbb;">Адміністрація залишає за собою право змінювати правила користування сервісом без попереднього повідомлення.</span></p>
-  </div>
+        <p><strong>8. Зміни в умовах</strong><br>
+        <span style="color: #bbb;">Адміністрація залишає за собою право змінювати правила користування сервісом без попереднього повідомлення.</span></p>
+      </div>
     </div>
   </div>
 
-  <div class="footer">
+  <div class="footer" role="contentinfo">
     © 2025 All rights reserved.
   </div>
 
   <script>
     function toggleMenu() {
       const menu = document.getElementById('sideMenu');
-      menu.classList.toggle('open');
-    }
-
-    function openModal(id) {
-      document.getElementById(id).style.display = 'flex';
-      if (id === 'cardModal') {
-        document.getElementById('commentCode').textContent = generateCode();
+      const isOpen = menu.classList.toggle('open');
+      menu.setAttribute('aria-hidden', !isOpen);
+      if (isOpen) {
+        menu.querySelector('.close').focus();
       }
     }
 
+    function openModal(id) {
+      const modal = document.getElementById(id);
+      modal.style.display = 'flex';
+      modal.setAttribute('aria-hidden', 'false');
+      modal.focus();
+      if (id === 'cardModal') {
+        document.getElementById('commentCode').textContent = generateCode();
+      }
+      // Prevent body scroll while modal is open
+      document.body.style.overflow = 'hidden';
+    }
+
     function closeModal(id) {
-      document.getElementById(id).style.display = 'none';
+      const modal = document.getElementById(id);
+      modal.style.display = 'none';
+      modal.setAttribute('aria-hidden', 'true');
+      // Restore body scroll
+      document.body.style.overflow = '';
     }
 
     function copyToClipboard(id) {
       const text = document.getElementById(id).textContent;
-      navigator.clipboard.writeText(text).then(() => alert("Скопійовано: " + text));
+      navigator.clipboard.writeText(text).then(() => {
+        alert("Скопійовано: " + text);
+      }).catch(() => {
+        alert("Не вдалося скопіювати текст");
+      });
     }
 
     function generateCode() {
@@ -354,10 +571,33 @@
     }
 
     function submitReview() {
+      const reviewText = document.getElementById('reviewText').value.trim();
+      const reviewStars = document.getElementById('reviewStars').value;
+
+      if (!reviewText) {
+        alert("Будь ласка, напишіть відгук перед відправкою.");
+        return;
+      }
+
+      // Тут можна додати відправку на сервер
       alert("Дякуємо за відгук! Ваш відгук проходить модерацію.");
       document.getElementById('reviewText').value = '';
       document.getElementById('reviewStars').value = '5';
     }
+
+    // Закриття модального вікна по ESC
+    window.addEventListener('keydown', function(event) {
+      if (event.key === "Escape") {
+        const modals = document.querySelectorAll('.modal');
+        modals.forEach(modal => {
+          if (modal.style.display === 'flex') {
+            modal.style.display = 'none';
+            modal.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = '';
+          }
+        });
+      }
+    });
   </script>
 </body>
 </html>
